@@ -1,4 +1,4 @@
-import { getPx } from '../utils';
+import { convertperMilliSecondsToPixel } from '../utils';
 const ROOT_COMMENT_CLASS_NAME = 'ytp-progress-bar';
 const CUSTOM_COMMENT_CLASS_NAME = 'ytp-tooltip-text-wrapper-custom';
 const CUSTOM_SCRUBBER_CLASS_NAME = 'ytp-scrubber-container-custom';
@@ -15,11 +15,11 @@ export const removeDivAll = () => {
   removeDIv($(`.${CUSTOM_SCRUBBER_CLASS_NAME}`)); // 기존 scrubber
 };
 
-export const addRootDiv = (items: any, pxPerMilliSeconds: number) => {
+export const addRootDiv = (items: any, perMilliSeconds: number) => {
   const rootTargetDiv = $(`.${ROOT_COMMENT_CLASS_NAME}`);
 
   items.forEach((item: any) => {
-    const resultPx = getPx(pxPerMilliSeconds, item.time[1], item.time[2]);
+    const resultPx = convertperMilliSecondsToPixel(perMilliSeconds, item.time[1], item.time[2]);
     const scurubberDiv = setEventScrubberDiv(item.time[0], item.origin, resultPx);
     if (rootTargetDiv.length) {
       rootTargetDiv.append(scurubberDiv);

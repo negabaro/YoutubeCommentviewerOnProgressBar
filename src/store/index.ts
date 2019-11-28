@@ -4,8 +4,8 @@ import Vuex from 'vuex';
 import * as getters from './getters';
 import mutations from './mutations';
 import state from './state';
-import { actions } from './actions';
-// import { Istore } from '@/types/store';
+// import { actions } from './actions';
+
 Vue.use(Vuex);
 
 // export default new Vuex.Store<RootState>( store )
@@ -14,7 +14,7 @@ export const store = new Vuex.Store<any>({
   getters,
   state,
   mutations,
-  actions,
+  // actions,
 });
 
 export default store;

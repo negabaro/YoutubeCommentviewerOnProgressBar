@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import { IoriginCommentItem, IfilteredCommentItem } from '../types/api';
 
 const convertDuration = (durationOrigin: string) => {
@@ -28,7 +27,7 @@ export const getPerMilliSeconds = (durationOrigin: any, slideBarWidthSize: numbe
   return slideBarWidthSize / (duration * 1000);
 };
 
-export const getPx = (pxPerMilliSeconds: number, hours: number, minute: number) => {
+export const convertperMilliSecondsToPixel = (pxPerMilliSeconds: number, hours: number, minute: number) => {
   return pxPerMilliSeconds * ((hours * 60 + +minute) * 1000);
 };
 

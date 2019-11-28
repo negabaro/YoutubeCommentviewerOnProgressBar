@@ -25,7 +25,6 @@ describe('11', () => {
         },
       },
     };
-    // keke.snippet.topLevelComment.snippet.textOriginal = 'xx';
 
     const test = [keke, keke2, keke];
     const result = getCommentOnlyContainMMSS(test);
