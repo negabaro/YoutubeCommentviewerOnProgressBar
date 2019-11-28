@@ -1,0 +1,30 @@
+{
+  "name": "YoutubeCommentViewerOnProgressBar",
+  "description": "A Vue.js web extension",
+  "version": null,
+  "manifest_version": 2,
+  "icons": {
+    "48": "icons/icon_48.png",
+    "128": "icons/icon_128.png"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://www.youtube.com/watch*", "https://www.youtube.com/watch*"],
+      "js": ["content.js", "jquery.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "tabs",
+    "storage",
+    "http://*/*",
+    "https://*/*",
+    "https://www.googleapis.com/",
+    "cookies"
+  ]
+}
