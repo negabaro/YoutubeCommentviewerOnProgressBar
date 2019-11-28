@@ -1,7 +1,6 @@
 const sendMessage = <T>(data: any): Promise<T> => {
   return new Promise(function(resolve, reject) {
     chrome.runtime.sendMessage(data, res => {
-      // console.log('受け取ったデータ33：', res);
       resolve(res as T);
     });
   });
@@ -23,7 +22,7 @@ export const fetchVideoDuration = async <T>(videoId: string): Promise<T> => {
   return res;
 };
 
-export const fetchYoutubeApi = async <T>(videoId: string, nextPageToken: string): Promise<T> => {
+export const fetchYoutubeComment = async <T>(videoId: string, nextPageToken: string): Promise<T> => {
   const res = await sendMessage<T>({
     contentScriptQuery: 'queryComment',
     videoId: videoId,

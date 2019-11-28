@@ -1,25 +1,6 @@
 import * as types from './mutation-types';
 import { ActionTree } from 'vuex';
 import Repository from '../repository/Repository';
-/* 
-export const setFoo = ({ commit }: { commit: any }, payload: any) => {
-  console.log('setFoo', payload);
-  commit(types.UPDATE_FOO, payload);
-};
-*/
-
-/* 
-export const setCurrentVideoId = ({ commit }: { commit: any }, payload: any) => {
-  console.log('setCurrentVideoId', payload);
-  commit(types.UPDATE_CURRENT_VIDEO_ID, payload);
-};
-*/
-
-/*
-export const setCurrentNextPageToken = ({ commit }: { commit: any }, payload: any) => {
-  commit(types.UPDATE_NEXT_PAGETOKEN, payload);
-};
-*/
 
 /* 해당video의 전체커맨트수를 취득 */
 export const getAllCommentCountApi: any = async ({ commit, getters }: any, { videoId }: any) => {
@@ -87,24 +68,8 @@ export const reqBackgroundGetComment = async ({ commit, getters }: any, { videoI
   );
 };
 
-export const ArunYoutubeApiget: any = async (
-  { commit, getters }: any,
-  { videoId, pxPerMilliSeconds, nextPageToken }: any
-) => {
-  // commit(types.UPDATE_COMMENT_ITEM, res);
-};
-
 export const actions: ActionTree<any, any> = {
   getCommentApi,
-  // setFoo,
   getVideoDurationApi,
   getAllCommentCountApi,
-  // setCurrentVideoId,
-  // setCurrentNextPageToken,
 };
-
-/*
-export default: ActionTree<any, any> {
-  getCommentApi,
-};
-*/

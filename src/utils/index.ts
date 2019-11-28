@@ -1,10 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import { IoriginCommentItem, IfilteredCommentItem } from '../types/api';
 
-export const convertDuration = (duration: string) => {
-  console.log('duration', duration);
-  const resultMatched = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-  console.log('JJJJJJJJJJJ match', resultMatched);
+const convertDuration = (durationOrigin: string) => {
+  const resultMatched = durationOrigin.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
   let resultFiltered: string[] | undefined;
   if (resultMatched) {
     resultFiltered = resultMatched.slice(1).map(function(x) {
@@ -25,7 +23,8 @@ export const convertDuration = (duration: string) => {
   }
 };
 
-export const getPxPerMilliSeconds = (duration: number, slideBarWidthSize: number) => {
+export const getPerMilliSeconds = (durationOrigin: any, slideBarWidthSize: number) => {
+  const duration = convertDuration(durationOrigin);
   return slideBarWidthSize / (duration * 1000);
 };
 

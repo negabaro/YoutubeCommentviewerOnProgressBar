@@ -1,65 +1,42 @@
 import { getCommentOnlyContainMMSS } from '../utils/index';
 import { IoriginComment, IdurationDetail, IcommentCountDetail } from '@/types/api';
 import { fetchGet } from '../repository/Repository';
+const YOUTUBE_API_KEY = 'AIzaSyBo2-wFHQ-SFsOwby8P4B5_2xBqGic69lw';
+const getAllCommentCountApiPath = (videoId: string) => `videos?part=statistics&id=${videoId}&key=${YOUTUBE_API_KEY}`;
 
-const youtubeApiKey = 'AIzaSyBo2-wFHQ-SFsOwby8P4B5_2xBqGic69lw';
-const getAllCommentCountApiPath = (youtubeApiKey: string, videoId: string) => {
-  return `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoId}&key=${youtubeApiKey}`;
-};
-const getContentDetailsPath = (youtubeApiKey: string, videoId: string) => {
-  return `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=${youtubeApiKey}`;
+const getContentDetailsPath = (videoId: string) => `videos?id=${videoId}&part=contentDetails&key=${YOUTUBE_API_KEY}`;
+
+const getCommentApiPath = (videoId: string, nextPageToken: string | null): string => {
+  const commonPath = `commentThreads?key=${YOUTUBE_API_KEY}&textFormat=plainText&moderationStatus=published&order=relevance&part=snippet&videoId=${videoId}&maxResults=100`;
+  if (nextPageToken) {
+    return `${commonPath}&pageToken=${nextPageToken}`;
+  }
+  return commonPath;
 };
 
-const getPlayTimeApi = async <T>(videoId: string): Promise<T> => {
-  const url = getContentDetailsPath(youtubeApiKey, videoId);
+const fetchDuration = async <T>(videoId: string): Promise<T> => {
+  const url = getContentDetailsPath(videoId);
   const res = await fetchGet<T>(url);
   return res;
-
-  // const res = await fetch(getContentDetailsPath(youtubeApiKey, videoId));
-  // const data: items<durationDetail> = await res.json();
-  // return data;
 };
 
-const getAllCommentCountApi2 = async <T>(videoId: string): Promise<T> => {
+const fetchAllCommentCount = async <T>(videoId: string): Promise<T> => {
   // const res = await fetch(getAllCommentCountApiPath(youtubeApiKey, videoId));
-  const url = getAllCommentCountApiPath(youtubeApiKey, videoId);
+  const url = getAllCommentCountApiPath(videoId);
   const res = await fetchGet<T>(url);
   // const data: items<commentCountDetail> = await res.json();
   return res;
 };
 
-const getCommentApi = async <T>(videoId: string, nextPageToken: string): Promise<T> => {
+const fetchGetComment = async <T>(videoId: string, nextPageToken: string): Promise<T> => {
   let url;
   if (nextPageToken) {
-    url = getCommentApiPath(youtubeApiKey, videoId, nextPageToken);
+    url = getCommentApiPath(videoId, nextPageToken);
   } else {
-    url = getCommentApiPath(youtubeApiKey, videoId, null);
+    url = getCommentApiPath(videoId, null);
   }
   const res = await fetchGet<T>(url);
   return res;
-  // const res = await fetchCustom(url, 10);
-
-  // const res = await fetch(url);
-  // console.log('res', res);
-  // const data: IoriginComment = await res.json();
-  // console.log('data2', data);
-  // return data;
-
-  // return res;
-  // return data.items;
-  // ↓無理やり一行で書くとこうなる
-  // return await (await fetch(URL)).json();
-};
-
-const getCommentApiPath = (youtubeApiKey: string | null, videoId: string, nextPageToken: string | null): string => {
-  let result;
-  if (nextPageToken) {
-    result = `https://www.googleapis.com/youtube/v3/commentThreads?key=${youtubeApiKey}&textFormat=plainText&moderationStatus=published&order=relevance&part=snippet&videoId=${videoId}&maxResults=100&pageToken=${nextPageToken}`;
-  } else {
-    result = `https://www.googleapis.com/youtube/v3/commentThreads?key=${youtubeApiKey}&textFormat=plainText&moderationStatus=published&order=relevance&part=snippet&videoId=${videoId}&maxResults=100`;
-  }
-  console.log('result', result);
-  return result;
 };
 
 /* =============================================================================== */
@@ -68,7 +45,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse): an
   /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
   if (request.contentScriptQuery === 'queryComment') {
     (async () => {
-      const result = await getCommentApi<IoriginComment>(request.videoId, request.nextPageToken);
+      const result = await fetchGetComment<IoriginComment>(request.videoId, request.nextPageToken);
       const filterredResult = await getCommentOnlyContainMMSS(result.items);
       sendResponse({ result: filterredResult, nextPageToken: result.nextPageToken });
     })();
@@ -76,12 +53,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse): an
     return true; // Will respond asynchronously.
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
   } else if (request.contentScriptQuery === 'queryDuration') {
-    /* 
-    store.dispatch('getVideoDurationApi', { videoId: request.videoId });
-    const result = store.getters.videoDuration;
-    */
     (async () => {
-      const payload = await getPlayTimeApi<IdurationDetail>(request.videoId);
+      const payload = await fetchDuration<IdurationDetail>(request.videoId);
       const result = payload.items[0].contentDetails.duration;
       sendResponse({ result });
     })();
@@ -89,7 +62,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse): an
     return true; // Will respond asynchronously.
   } else if (request.contentScriptQuery === 'queryAllCommentCount') {
     (async () => {
-      const payload = await getAllCommentCountApi2<IcommentCountDetail>(request.videoId);
+      const payload = await fetchAllCommentCount<IcommentCountDetail>(request.videoId);
       const result = payload.items[0].statistics.commentCount;
       sendResponse({ result });
     })();
