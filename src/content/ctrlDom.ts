@@ -33,9 +33,7 @@ const setEventScrubberDiv = (time: string, origin: string, resultPx: number) => 
   scrubberDiv.bind('mouseover', function(event) {
     if (scrubberDiv.attr('value') === time) {
       const commentTargetDiv = $(`.${EVENT_TARGET_CLASS_NAME}`);
-      console.log('commentTargetDiv!!', commentTargetDiv);
       if (commentTargetDiv.length) {
-        console.log('origin', origin);
         const commentDiv = getCustomCommentDom(origin, time);
         commentTargetDiv.append(commentDiv);
       }

@@ -1,5 +1,5 @@
 import { getCommentOnlyContainMMSS } from '@/utils';
-import { IoriginCommentItem, IfilteredCommentItem } from '@/types/api';
+import { IoriginCommentItem } from '@/types/api';
 describe('11', () => {
   it('22', () => {
     const keke: IoriginCommentItem = {
